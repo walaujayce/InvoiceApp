@@ -1,0 +1,37 @@
+
+Tablet:
+1024 x 768 pixel
+278.54 x 174.06 mm
+
+Phone:
+667 x 375 pixel
+165 x 77.2 mm
+
+\\
+1. Invoices
+Title
+Row(Container): All / Unpaid / Partially / Overdue / Paid (Column: Title / {count} invoices / RM{total})
+Row(Icon): Filter / ALL / UNPAID / PARTIALLY / OVERDUE / PAID
+Column(Container): invoices
+2. Estimates
+
+3. Items
+
+4. Clients
+
+5. Settings
+
+
+onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => Scaffold(appBar: AppBar(title: Text('AAA'),),))),
+Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddInvoice()),
+    );
+
+BUTTON Type:
+ElevatedButton(onPressed: () {  }, child: null,),
+OutlinedButton(onPressed: () {  }, child: null,),
+TextButton(onPressed: () {  }, child: Text("AAA"),),
+IconButton(onPressed: () {  }, icon: Icon(Icons.add),),
+FloatingActionButton (onPressed: () {  }, child: null,),
+FilledButton(onPressed: () {  }, child: null,),
