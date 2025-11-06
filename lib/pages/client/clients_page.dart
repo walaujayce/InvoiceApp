@@ -1,58 +1,49 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:invoice_app/common/widgets/card.dart';
 import 'package:invoice_app/common/widgets/import_and_export_button.dart';
-import 'package:invoice_app/providers/item_provider.dart';
 import 'package:provider/provider.dart';
-import '../../common/widgets/card.dart';
 import '../../common/widgets/customSearchBar.dart';
 import '../../common/widgets/custom_filter.dart';
 import '../../common/widgets/filter_type_container.dart';
+import '../../providers/client_provider.dart';
 import '../../styles/colors.dart';
-import 'add_item_page.dart';
+import 'add_client_page.dart';
 
-class ItemsPage extends StatefulWidget {
-  const ItemsPage({super.key});
+class ClientsPage extends StatefulWidget {
+  const ClientsPage({super.key});
 
   @override
-  State<ItemsPage> createState() => _ItemsPageState();
+  State<ClientsPage> createState() => _ClientsPageState();
 }
 
-class _ItemsPageState extends State<ItemsPage> {
-  final double heightFilterBar = 40;
+class _ClientsPageState extends State<ClientsPage> {
+  final double heightFilterBar = 40.0;
 
   @override
   Widget build(BuildContext context) {
-    void navigateToAddItem(BuildContext context) => Navigator.push(
+    void navigateToAddClient(BuildContext context) => Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddItem()),
+      MaterialPageRoute(builder: (context) => AddClient()),
     );
     // Use context.watch() to get the provider and rebuild when it changes.
-    final itemProvider = context.watch<ItemProvider>();
+    final clientProvider = context.watch<ClientProvider>();
 
     // Use context.read() inside callbacks (like onPressed) to call methods
     // without rebuilding the widget.
-    final itemProviderReader = context.read<ItemProvider>();
+    final clientProviderReader = context.read<ClientProvider>();
 
     // The logic for filteredCardList is now inside the provider.
-    final List<ItemCard> filteredCardList = itemProvider.filteredCardList;
+    final List<ClientCard> filteredCardList = clientProvider.filteredCardList;
     if(kDebugMode) print("filteredCardList: $filteredCardList");
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColor.globalBackground,
-        title: Text(
-          'Items',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w500,
-            fontSize: 22.0,
-          ),
-        ),
-        actions: [
-          GestureDetector(onTap: (){} ,child: ImportAndExportButton()),
-        ],
+        title: const Text('Clients'),
+        actions: [ImportAndExportButton()],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => navigateToAddItem(context),
+        onPressed: () =>navigateToAddClient(context),
         elevation: 3.0,
         backgroundColor: Colors.blueAccent[700],
         shape: CircleBorder(
@@ -82,19 +73,19 @@ class _ItemsPageState extends State<ItemsPage> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         // Call the provider's method
-                        onTap: () => itemProviderReader.updateFilter(index),
+                        onTap: () => clientProviderReader.updateFilter(index),
                         child: FilterTypeContainer(
                           height: heightFilterBar,
                           // Get data from the provider
-                          content: itemProvider.filterTypeList[index],
+                          content: clientProvider.filterTypeList[index],
                           // Get data from the provider
-                          isSelected: itemProvider.selectedIndex == index,
+                          isSelected: clientProvider.selectedIndex == index,
                         ),
                       );
                     },
                     separatorBuilder: (context, index) => SizedBox(width: 10.0),
                     // Get data from the provider
-                    itemCount: itemProvider.filterTypeList.length,
+                    itemCount: clientProvider.filterTypeList.length,
                   ),
                 ),
               ],
@@ -120,3 +111,4 @@ class _ItemsPageState extends State<ItemsPage> {
     );
   }
 }
+

@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import '../common/widgets/card.dart';
 
-class ItemProvider extends ChangeNotifier {
+class ClientProvider extends ChangeNotifier {
   int _selectedIndex = 0;
   int get selectedIndex => _selectedIndex;
 
   final List<String> _filterTypeList = ["ALL"];
   List<String> get filterTypeList => _filterTypeList;
 
-  final List<ItemCard> _itemCardList = [
-    ItemCard(itemName: "Item A", itemPrice: 10.00),
-    ItemCard(itemName: "Item B", itemPrice: 20.00),
-    ItemCard(itemName: "Item C", itemPrice: 30.00),
+  final List<ClientCard> _clientCardList = [
+    ClientCard(clientName: "Item A", invoiceCount: 10),
+    ClientCard(clientName: "Item A", invoiceCount: 20),
+    ClientCard(clientName: "Item A", invoiceCount: 30),
   ];
 
   String get selectedFilter => _filterTypeList[_selectedIndex];
-  List<ItemCard> get filteredCardList {
+  List<ClientCard> get filteredCardList {
     if (selectedFilter == "ALL") {
-      return _itemCardList;
+      return _clientCardList;
     } else {
-      return _itemCardList.where((card) {
-        return card.category == selectedFilter;
+      return _clientCardList.where((card) {
+        return card.clientClassification == selectedFilter;
       }).toList();
     }
   }
@@ -34,8 +34,8 @@ class ItemProvider extends ChangeNotifier {
   }
 
   // This replaces addInvoiceCard
-  void addItemCard() {
-    _itemCardList.add(ItemCard(itemName: "New Item", itemPrice: 99.00));
+  void addClientCard() {
+    _clientCardList.add(ClientCard(clientName: "New Item", invoiceCount: 99));
     notifyListeners(); // This tells the UI to rebuild
   }
 }

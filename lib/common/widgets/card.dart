@@ -219,7 +219,7 @@ class ItemCard extends StatelessWidget {
       padding: EdgeInsets.all(10),
       height: 50,
       decoration: BoxDecoration(
-        color: Colors.blue,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Row(
@@ -235,7 +235,57 @@ class ItemCard extends StatelessWidget {
                 "\$$itemPrice",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              SizedBox(width: 10,),
+              SizedBox(width: 10),
+              Icon(Icons.more_vert_rounded),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ClientCard extends StatelessWidget {
+  final String clientName;
+  final String clientEmail;
+  final String clientAddress;
+  final String clientPhone;
+  final String clientClassification;
+  final int invoiceCount;
+
+  const ClientCard({
+    super.key,
+    required this.clientName,
+    this.clientEmail = "",
+    this.clientAddress = "",
+    this.clientPhone = "",
+    this.clientClassification = "None",
+    this.invoiceCount = 0,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(10),
+      height: 50,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(clientName, style: TextStyle(fontWeight: FontWeight.bold)),
+          Row(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            // crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "$invoiceCount invoices",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              SizedBox(width: 10),
               Icon(Icons.more_vert_rounded),
             ],
           ),
