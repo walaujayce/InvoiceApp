@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 
 class InputTextField extends StatelessWidget {
   final String title;
-  const InputTextField({super.key, required this.title});
+  final TextEditingController? inputController;
+
+  const InputTextField({super.key, required this.title, this.inputController});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 50,
       child: TextField(
+        controller: inputController,
         decoration: InputDecoration(
           labelText: title,
           // Default border when the TextField is enabled but not focused

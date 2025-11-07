@@ -38,3 +38,9 @@ class AppContainerColor {
   static const Color filterUnselected = Color(0xFFF6E8FB);
   static const Color filterSelected = Color(0xFF3D5AFE);
 }
+
+// Setting Color
+class AppSettingColor{
+  static const Color settingIconColor = Color(0xFF3D5AFE);
+
+}

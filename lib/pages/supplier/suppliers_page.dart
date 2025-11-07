@@ -2,50 +2,52 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:invoice_app/common/widgets/card.dart';
 import 'package:invoice_app/common/widgets/import_and_export_button.dart';
+import 'package:invoice_app/providers/supplier_provider.dart';
 import 'package:provider/provider.dart';
 import '../../common/widgets/customSearchBar.dart';
 import '../../common/widgets/custom_filter.dart';
 import '../../common/widgets/filter_type_container.dart';
-import '../../providers/client_provider.dart';
 import '../../styles/colors.dart';
-import 'add_client_page.dart';
+import 'add_supplier_page.dart';
 
-class ClientsPage extends StatefulWidget {
-  const ClientsPage({super.key});
+class SuppliersPage extends StatefulWidget {
+  const SuppliersPage({super.key});
 
   @override
-  State<ClientsPage> createState() => _ClientsPageState();
+  State<SuppliersPage> createState() => _SupplierPageState();
 }
 
-class _ClientsPageState extends State<ClientsPage> {
+class _SupplierPageState extends State<SuppliersPage> {
   final double heightFilterBar = 40.0;
-  bool isClientListEmpty = true;
+  bool isSupplierListEmpty = true;
 
   @override
   Widget build(BuildContext context) {
-    void navigateToAddClient(BuildContext context) => Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => AddClient()),
-    );
+
     // Use context.watch() to get the provider and rebuild when it changes.
-    final clientProvider = context.watch<ClientProvider>();
+    final supplierProvider = context.watch<SupplierProvider>();
 
     // Use context.read() inside callbacks (like onPressed) to call methods
     // without rebuilding the widget.
-    final clientProviderReader = context.read<ClientProvider>();
+    final supplierProviderReader = context.read<SupplierProvider>();
 
     // The logic for filteredCardList is now inside the provider.
-    final List<ClientCard> filteredCardList = clientProvider.filteredCardList;
+    final List<SupplierCard> filteredCardList = supplierProvider.filteredCardList;
+
+    void navigateToAddSupplier(BuildContext context) => Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddSupplier(context:context)),
+    );
 
     if (kDebugMode) print("filteredCardList: $filteredCardList");
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Clients'),
+        title: const Text('Suppliers'),
         actions: [ImportAndExportButton()],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => navigateToAddClient(context),
+        onPressed: () => navigateToAddSupplier(context),
         elevation: 3.0,
         backgroundColor: Colors.blueAccent[700],
         shape: CircleBorder(
@@ -75,19 +77,19 @@ class _ClientsPageState extends State<ClientsPage> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         // Call the provider's method
-                        onTap: () => clientProviderReader.updateFilter(index),
+                        onTap: () => supplierProviderReader.updateFilter(index),
                         child: FilterTypeContainer(
                           height: heightFilterBar,
                           // Get data from the provider
-                          content: clientProvider.filterTypeList[index],
+                          content: supplierProvider.filterTypeList[index],
                           // Get data from the provider
-                          isSelected: clientProvider.selectedIndex == index,
+                          isSelected: supplierProvider.selectedIndex == index,
                         ),
                       );
                     },
                     separatorBuilder: (context, index) => SizedBox(width: 10.0),
                     // Get data from the provider
-                    itemCount: clientProvider.filterTypeList.length,
+                    itemCount: supplierProvider.filterTypeList.length,
                   ),
                 ),
               ],
@@ -96,48 +98,48 @@ class _ClientsPageState extends State<ClientsPage> {
           // Invoice List
           filteredCardList.isEmpty
               ? Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "No clients!",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 28,
-                          letterSpacing: 1.5,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                        child: Text(
-                          "Please tap on the plus (+) button bellow to create an client.",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 14,
-                            letterSpacing: 1.5,
-                          ),
-                        ),
-                      ),
-                    ],
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "No clients!",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 28,
+                    letterSpacing: 1.5,
                   ),
-                )
-              : Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: ListView.separated(
-                      itemBuilder: (context, index) {
-                        // Get data from the provider's derived list
-                        return filteredCardList[index];
-                      },
-                      separatorBuilder: (context, index) {
-                        return SizedBox(height: 10);
-                      },
-                      // Get data from the provider's derived list
-                      itemCount: filteredCardList.length,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                  child: Text(
+                    "Please tap on the plus (+) button bellow to create an client.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14,
+                      letterSpacing: 1.5,
                     ),
                   ),
                 ),
+              ],
+            ),
+          )
+              : Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: ListView.separated(
+                itemBuilder: (context, index) {
+                  // Get data from the provider's derived list
+                  return filteredCardList[index];
+                },
+                separatorBuilder: (context, index) {
+                  return SizedBox(height: 10);
+                },
+                // Get data from the provider's derived list
+                itemCount: filteredCardList.length,
+              ),
+            ),
+          ),
         ],
       ),
     );

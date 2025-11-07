@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:invoice_app/common/widgets/custom_dropdownmenu.dart';
+import 'package:invoice_app/common/widgets/custom_dropdown.dart';
 import 'package:invoice_app/common/widgets/text_field.dart';
 import '../../styles/colors.dart';
 

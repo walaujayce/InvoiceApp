@@ -9,9 +9,9 @@ class ClientProvider extends ChangeNotifier {
   List<String> get filterTypeList => _filterTypeList;
 
   final List<ClientCard> _clientCardList = [
-    ClientCard(clientName: "Item A", invoiceCount: 10),
-    ClientCard(clientName: "Item A", invoiceCount: 20),
-    ClientCard(clientName: "Item A", invoiceCount: 30),
+    ClientCard(clientName: "Client A", invoiceCount: 10),
+    ClientCard(clientName: "Client B", invoiceCount: 20),
+    ClientCard(clientName: "Client C", invoiceCount: 30),
   ];
 
   String get selectedFilter => _filterTypeList[_selectedIndex];

@@ -35,3 +35,20 @@ TextButton(onPressed: () {  }, child: Text("AAA"),),
 IconButton(onPressed: () {  }, icon: Icon(Icons.add),),
 FloatingActionButton (onPressed: () {  }, child: null,),
 FilledButton(onPressed: () {  }, child: null,),
+
+
+
+Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: ListView.separated(
+                itemBuilder: (context, index) {
+                  // Get data from the provider's derived list
+                  return filteredCardList[index];
+                },
+                separatorBuilder: (context, index) {return SizedBox(height: 10,);},
+                // Get data from the provider's derived list
+                itemCount: filteredCardList.length,
+              ),
+            ),
+          ),
