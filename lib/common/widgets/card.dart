@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:invoice_app/pages/item/add_item_page.dart';
 import 'package:invoice_app/util/enums.dart';
 import 'package:provider/provider.dart';
-
+import '../../models/item.dart';
 import '../../models/supplier.dart';
 import '../../pages/supplier/add_supplier_page.dart';
 import '../../providers/supplier_provider.dart';
@@ -204,48 +205,48 @@ class CommonCard extends StatelessWidget {
 }
 
 class ItemCard extends StatelessWidget {
-  final String itemName;
-  final double itemPrice;
-  final String unit;
-  final String category;
-  final String description;
+  final Item item;
 
-  const ItemCard({
-    super.key,
-    required this.itemName,
-    required this.itemPrice,
-    this.unit = "",
-    this.category = "",
-    this.description = "",
-  });
+  const ItemCard({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(10),
-      height: 50,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(itemName, style: TextStyle(fontWeight: FontWeight.bold)),
-          Row(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "\$$itemPrice",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(width: 10),
-              Icon(Icons.more_vert_rounded),
-            ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AddItem(
+              isNew: false,
+              item: item, // Pass the supplier's data
+            ),
           ),
-        ],
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.all(10),
+        height: 50,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(item.name, style: TextStyle(fontWeight: FontWeight.bold)),
+            Row(
+              children: [
+                Text(
+                  "\$${item.price}",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(width: 10),
+                Icon(Icons.more_vert_rounded),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -309,64 +310,64 @@ class SupplierCard extends StatelessWidget {
 
   // --- Helper Method to Show Options ---
   void _showOptions(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      // Use shape for rounded corners
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (ctx) {
-        // Use Wrap to make the sheet only as tall as its children
-        return Wrap(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.edit_outlined),
-              title: const Text('Edit Supplier'),
-              onTap: () {
-                // 1. Close the bottom sheet
-                Navigator.pop(ctx);
-
-                // 2. Navigate to the AddSupplier page in edit mode
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AddSupplier(
-                      isNew: true,
-                      supplier: supplier, // Pass the supplier's data
-                    ),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.delete_outline, color: Colors.red[700]),
-              title: Text(
-                'Delete Supplier',
-                style: TextStyle(color: Colors.red[700]),
-              ),
-              onTap: () {
-                // 1. Close the bottom sheet
-                Navigator.pop(ctx);
-
-                // 2. Call the provider to delete this supplier
-                // We use context.read inside a callback
-                context.read<SupplierProvider>().deleteSupplierCard(
-                  supplier.id,
-                );
-
-                // Optional: Show a snack bar confirmation
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text("${supplier.name} deleted."),
-                    backgroundColor: Colors.red[700],
-                  ),
-                );
-              },
-            ),
-          ],
-        );
-      },
-    );
+    // showModalBottomSheet(
+    //   context: context,
+    //   // Use shape for rounded corners
+    //   shape: const RoundedRectangleBorder(
+    //     borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+    //   ),
+    //   builder: (ctx) {
+    //     // Use Wrap to make the sheet only as tall as its children
+    //     return Wrap(
+    //       children: [
+    //         ListTile(
+    //           leading: const Icon(Icons.edit_outlined),
+    //           title: const Text('Edit Supplier'),
+    //           onTap: () {
+    //             // 1. Close the bottom sheet
+    //             Navigator.pop(ctx);
+    //
+    //             // 2. Navigate to the AddSupplier page in edit mode
+    //             Navigator.push(
+    //               context,
+    //               MaterialPageRoute(
+    //                 builder: (context) => AddSupplier(
+    //                   isNew: true,
+    //                   supplier: supplier, // Pass the supplier's data
+    //                 ),
+    //               ),
+    //             );
+    //           },
+    //         ),
+    //         ListTile(
+    //           leading: Icon(Icons.delete_outline, color: Colors.red[700]),
+    //           title: Text(
+    //             'Delete Supplier',
+    //             style: TextStyle(color: Colors.red[700]),
+    //           ),
+    //           onTap: () {
+    //             // 1. Close the bottom sheet
+    //             Navigator.pop(ctx);
+    //
+    //             // 2. Call the provider to delete this supplier
+    //             // We use context.read inside a callback
+    //             context.read<SupplierProvider>().deleteSupplierCard(
+    //               supplier.id,
+    //             );
+    //
+    //             // Optional: Show a snack bar confirmation
+    //             ScaffoldMessenger.of(context).showSnackBar(
+    //               SnackBar(
+    //                 content: Text("${supplier.name} deleted."),
+    //                 backgroundColor: Colors.red[700],
+    //               ),
+    //             );
+    //           },
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
   }
 
   @override
@@ -400,6 +401,7 @@ class SupplierCard extends StatelessWidget {
         title: Text(supplier.name),
         subtitle: Text("${supplier.invoiceCount} invoices"),
         onTap: () {
+          if(kDebugMode) print("Tap ${supplier.name} : ${supplier.id}");
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -410,13 +412,37 @@ class SupplierCard extends StatelessWidget {
             ),
           );
         },
-        trailing: IconButton(
-          icon: const Icon(Icons.more_vert_rounded),
-          color: Colors.grey[600],
-          onPressed: () {
-            // Call the method to show the options menu
-            _showOptions(context);
+        trailing: PopupMenuButton(
+          itemBuilder: (context) => [
+            PopupMenuItem(value: 0, child: Text("Duplicate")),
+            PopupMenuItem(
+              value: 1,
+              child: Text("Delete", style: TextStyle(color: Colors.red[700])),
+            ),
+          ],
+          onSelected: (value) {
+            switch (value) {
+              case 0:
+                context.read<SupplierProvider>().duplicateSupplierCard(
+                  supplier,
+                );
+                break;
+              case 1:
+                context.read<SupplierProvider>().deleteSupplierCard(
+                  supplier.id,
+                );
+                break;
+            }
           },
+          color: Colors.white,
+          popUpAnimationStyle: AnimationStyle(
+            curve: Curves.easeOut, // Entry animation curve
+            duration: Duration(milliseconds: 100), // Entry animation duration
+            reverseCurve: Curves.easeIn, // Exit animation curve
+            reverseDuration: Duration(
+              milliseconds: 100,
+            ), // Exit animation duration
+          ),
         ),
       ),
     );

@@ -1,10 +1,18 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class CustomDropdownMenu extends StatelessWidget {
   final String title;
   final List<DropdownMenuEntry<dynamic>> dropDownList;
-
-  const CustomDropdownMenu({super.key,required this.title, required this.dropDownList});
+  final dynamic initialSelection; // To set the starting value
+  final void Function(dynamic)? onSelected; // To get the new value
+  const CustomDropdownMenu({
+    super.key,
+    required this.title,
+    required this.dropDownList,
+    this.initialSelection,
+    this.onSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +36,9 @@ class CustomDropdownMenu extends StatelessWidget {
           ),
         ),
         dropdownMenuEntries: dropDownList,
-        initialSelection: dropDownList[0].label,
-        label: Text(title,style: TextStyle(color: Colors.blue),),
+        initialSelection: initialSelection,
+        onSelected: onSelected,
+        label: Text(title, style: TextStyle(color: Colors.blue)),
       ),
     );
   }

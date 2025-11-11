@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart' hide MenuBar;
+import 'package:invoice_app/models/item.dart';
+import 'package:invoice_app/pages/item/add_item_page.dart';
 import 'package:invoice_app/pages/setting/settings_page.dart';
+import 'package:invoice_app/pages/supplier/add_supplier_page.dart';
 import 'package:invoice_app/pages/supplier/suppliers_page.dart';
 import 'package:invoice_app/components/menu_bar.dart';
 import 'pages/client/clients_page.dart';

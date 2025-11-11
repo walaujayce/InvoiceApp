@@ -23,7 +23,6 @@ class _SupplierPageState extends State<SuppliersPage> {
 
   @override
   Widget build(BuildContext context) {
-
     // Use context.watch() to get the provider and rebuild when it changes.
     final supplierProvider = context.watch<SupplierProvider>();
 
@@ -32,18 +31,22 @@ class _SupplierPageState extends State<SuppliersPage> {
     final supplierProviderReader = context.read<SupplierProvider>();
 
     // The logic for filteredCardList is now inside the provider.
-    final List<SupplierCard> filteredCardList = supplierProvider.filteredCardList;
+    final List<SupplierCard> filteredCardList =
+        supplierProvider.filteredCardList;
 
     void navigateToAddSupplier(BuildContext context) => Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddSupplier(context:context)),
+      MaterialPageRoute(builder: (context) => AddSupplier(context: context)),
     );
 
     if (kDebugMode) print("filteredCardList: $filteredCardList");
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Suppliers'),
+        title: const Text(
+          'Suppliers',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         actions: [ImportAndExportButton()],
       ),
       floatingActionButton: FloatingActionButton(
@@ -98,48 +101,45 @@ class _SupplierPageState extends State<SuppliersPage> {
           // Invoice List
           filteredCardList.isEmpty
               ? Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "No clients!",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 28,
-                    letterSpacing: 1.5,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "No clients!",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 28,
+                          letterSpacing: 1.5,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                        child: Text(
+                          "Please tap on the plus (+) button bellow to create an client.",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 14, letterSpacing: 1.5),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                  child: Text(
-                    "Please tap on the plus (+) button bellow to create an client.",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14,
-                      letterSpacing: 1.5,
+                )
+              : Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: ListView.separated(
+                      itemBuilder: (context, index) {
+                        // Get data from the provider's derived list
+                        return filteredCardList[index];
+                      },
+                      separatorBuilder: (context, index) {
+                        return SizedBox(height: 10);
+                      },
+                      // Get data from the provider's derived list
+                      itemCount: filteredCardList.length,
                     ),
                   ),
                 ),
-              ],
-            ),
-          )
-              : Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: ListView.separated(
-                itemBuilder: (context, index) {
-                  // Get data from the provider's derived list
-                  return filteredCardList[index];
-                },
-                separatorBuilder: (context, index) {
-                  return SizedBox(height: 10);
-                },
-                // Get data from the provider's derived list
-                itemCount: filteredCardList.length,
-              ),
-            ),
-          ),
         ],
       ),
     );

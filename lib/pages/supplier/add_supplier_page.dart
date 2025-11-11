@@ -28,31 +28,34 @@ class _AddSupplierState extends State<AddSupplier> {
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _addressController = TextEditingController();
-  // Add controller or variable for Dropdown
-  String _selectedClassification = "ALL";
 
+  int selectedClassification = 0;
   bool isSaveButtonPressed = false;
 
   void saveSupplier() {
     isSaveButtonPressed = true;
     if (_formKey.currentState!.validate()) {
       if (widget.isNew) {
-        context.read<SupplierProvider>().addSupplierCard(Supplier(
-          name: _supplierNameController.text,
-          email: _emailController.text,
-          phone: _phoneController.text,
-          address: _addressController.text,
-          classification: _selectedClassification,
-        ));
+        context.read<SupplierProvider>().addSupplierCard(
+          Supplier(
+            name: _supplierNameController.text,
+            email: _emailController.text,
+            phone: _phoneController.text,
+            address: _addressController.text,
+            classification: selectedClassification,
+          ),
+        );
       } else {
-        context.read<SupplierProvider>().updateSupplierCard(Supplier(
-          id: widget.supplier!.id,
-          name: _supplierNameController.text,
-          email: _emailController.text,
-          phone: _phoneController.text,
-          address: _addressController.text,
-          classification: _selectedClassification,
-        ));
+        context.read<SupplierProvider>().updateSupplierCard(
+          Supplier(
+            id: widget.supplier!.id,
+            name: _supplierNameController.text,
+            email: _emailController.text,
+            phone: _phoneController.text,
+            address: _addressController.text,
+            classification: selectedClassification,
+          ),
+        );
       }
       // After saving, you probably want to close the page
       Navigator.of(context).pop();
@@ -72,7 +75,7 @@ class _AddSupplierState extends State<AddSupplier> {
       _emailController.text = widget.supplier!.email;
       _phoneController.text = widget.supplier!.phone;
       _addressController.text = widget.supplier!.address;
-      _selectedClassification = widget.supplier!.classification;
+      selectedClassification = widget.supplier!.classification;
     }
 
     _supplierNameController.addListener(() {
@@ -131,18 +134,39 @@ class _AddSupplierState extends State<AddSupplier> {
               SizedBox(height: 10),
               InputTextField(title: "Email", inputController: _emailController),
               SizedBox(height: 10),
-              InputTextField(title: "Phone Number"),
+              InputTextField(
+                title: "Phone Number",
+                inputController: _phoneController,
+              ),
               SizedBox(height: 10),
-              InputTextField(title: "Address"),
+              InputTextField(
+                title: "Address",
+                inputController: _addressController,
+              ),
               SizedBox(height: 10),
               CustomDropdownMenu(
-                title: "Supplier Classification",
-                dropDownList: [
-                  DropdownMenuEntry(value: "None", label: "None"),
-                  DropdownMenuEntry(value: "VIP", label: "VIP"),
-                  DropdownMenuEntry(value: "Regular", label: "Regular"),
-                  DropdownMenuEntry(value: "Discount", label: "Discount"),
-                ],
+                title: "Classification",
+                dropDownList: context
+                    .read<SupplierProvider>()
+                    .classificationList
+                    .entries
+                    .map((entry) {
+                      return DropdownMenuEntry(
+                        value: entry.key, // Use the map key (int) as the value
+                        label: entry
+                            .value, // Use the map value (String) as the label
+                      );
+                    })
+                    .toList(),
+                initialSelection: selectedClassification,
+                onSelected: (selectedValue) {
+                  if (selectedValue != null) {
+                    setState(() {
+                      // The callback gives you the VALUE (the int)
+                      selectedClassification = selectedValue as int;
+                    });
+                  }
+                },
               ),
               SizedBox(height: 10),
             ],

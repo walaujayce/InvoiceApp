@@ -8,7 +8,7 @@ class Supplier {
   final String email;
   final String phone;
   final String address;
-  final String classification;
+  final int classification;
   final int invoiceCount;
 
   Supplier({
@@ -17,7 +17,8 @@ class Supplier {
     this.email = "",
     this.phone = "",
     this.address = "",
-    this.classification = "",
+    this.classification = 0,
     this.invoiceCount = 0,
   }) : id = id ?? Uuid().v4();
+
 }

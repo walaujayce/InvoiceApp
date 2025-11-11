@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import '../common/widgets/card.dart';
 import '../models/supplier.dart';
 
@@ -26,6 +25,14 @@ class SupplierProvider extends ChangeNotifier {
       }).toList();
     }
   }
+
+  final Map<int, String> _classificationList = {
+    0: "None",
+    1: "VIP",
+    2: "Regular",
+    3: "Discount",
+  };
+  Map<int, String> get classificationList => _classificationList;
 
   // --- METHODS (Logic) ---
 
@@ -62,5 +69,18 @@ class SupplierProvider extends ChangeNotifier {
     // Remove the card where the supplier ID matches.
     _supplierCardList.removeWhere((card) => card.supplier.id == supplierId);
     notifyListeners(); // Tell the UI to rebuild
+  }
+
+  void duplicateSupplierCard(Supplier currentSupplier) {
+    Supplier newSupplier = Supplier(
+      name: currentSupplier.name,
+      email: currentSupplier.email,
+      phone: currentSupplier.phone,
+      address: currentSupplier.address,
+      classification: currentSupplier.classification,
+      invoiceCount: currentSupplier.invoiceCount,
+    );
+    _supplierCardList.add(SupplierCard(supplier: newSupplier));
+    notifyListeners(); // This tells the UI to rebuild
   }
 }

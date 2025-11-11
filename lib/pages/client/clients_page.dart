@@ -41,7 +41,10 @@ class _ClientsPageState extends State<ClientsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Clients'),
+        title: const Text(
+          'Clients',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         actions: [ImportAndExportButton()],
       ),
       floatingActionButton: FloatingActionButton(
@@ -113,10 +116,7 @@ class _ClientsPageState extends State<ClientsPage> {
                         child: Text(
                           "Please tap on the plus (+) button bellow to create an client.",
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 14,
-                            letterSpacing: 1.5,
-                          ),
+                          style: TextStyle(fontSize: 14, letterSpacing: 1.5),
                         ),
                       ),
                     ],

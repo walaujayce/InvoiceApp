@@ -8,11 +8,15 @@ class InputTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 50,
+    return IntrinsicHeight(
       child: TextField(
+        minLines: 1,
+        maxLines: 3,
+        keyboardType:  TextInputType.multiline,
         controller: inputController,
         decoration: InputDecoration(
+          // filled: true,
+          // fillColor: Colors.red,
           labelText: title,
           // Default border when the TextField is enabled but not focused
           enabledBorder: OutlineInputBorder(
@@ -77,6 +81,7 @@ class InputTextFormField extends StatelessWidget {
         labelText: title,
         // Default border when the TextField is enabled but not focused
         enabledBorder: OutlineInputBorder(
+
           borderSide: BorderSide(
             color: Color(
               0xFFDDDCDC,
