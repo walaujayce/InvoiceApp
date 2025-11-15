@@ -1,37 +1,29 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:invoice_app/pages/client/add_client_page.dart';
 import 'package:invoice_app/pages/item/add_item_page.dart';
+import 'package:invoice_app/providers/item_provider.dart';
 import 'package:invoice_app/util/enums.dart';
 import 'package:provider/provider.dart';
+import '../../models/client.dart';
+import '../../models/invoice.dart';
 import '../../models/item.dart';
 import '../../models/supplier.dart';
 import '../../pages/supplier/add_supplier_page.dart';
+import '../../providers/client_provider.dart';
 import '../../providers/supplier_provider.dart';
 import '../../styles/colors.dart';
 
-class CommonCard extends StatelessWidget {
+class InvoiceCard extends StatelessWidget {
   final double _containerRadius = 10.0;
   final double _remarkFontSize = 11.0;
   final double _remarkIconSize = 12.0;
-  final EPaymentState paymentStatus;
-  final String setDate;
-  final String clientName;
-  final String invoiceID;
-  final String paymentStatusString;
-  final double invoiceTotal;
-  final String remark1;
-  final String remark2;
 
-  const CommonCard({
+  final Invoice invoice;
+
+  const InvoiceCard({
     super.key,
-    required this.paymentStatus,
-    required this.setDate,
-    required this.clientName,
-    required this.invoiceID,
-    this.remark1 = "",
-    this.remark2 = "",
-    required this.paymentStatusString,
-    required this.invoiceTotal,
+    required this.invoice,
   });
 
   Color getRemark1Color(EPaymentState paymentStatus) {
@@ -64,7 +56,7 @@ class CommonCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (kDebugMode) print("clientName: $clientName");
+        if (kDebugMode) print("clientName: ${invoice.clientName}");
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
@@ -92,7 +84,7 @@ class CommonCard extends StatelessWidget {
                 Container(
                   width: 5,
                   decoration: BoxDecoration(
-                    color: paymentStateReturnColor(paymentStatus),
+                    color: paymentStateReturnColor(invoice.paymentStatus),
                   ),
                 ),
                 // content
@@ -109,37 +101,37 @@ class CommonCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // date
-                            Text(setDate, style: TextStyle(color: Colors.grey)),
+                            Text(invoice.setDate, style: TextStyle(color: Colors.grey)),
                             // client name
                             Text(
-                              clientName,
+                              invoice.clientName,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             // invoice id
-                            Text(invoiceID),
+                            Text(invoice.invoiceID),
                             // remark 1
-                            if (remark1.isNotEmpty)
+                            if (invoice.remark1.isNotEmpty)
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(
-                                    getRemark1Icon(paymentStatus),
-                                    color: getRemark1Color(paymentStatus),
+                                    getRemark1Icon(invoice.paymentStatus),
+                                    color: getRemark1Color(invoice.paymentStatus),
                                     size: _remarkIconSize,
                                   ),
                                   SizedBox(width: 5),
 
                                   Text(
-                                    remark1,
+                                    invoice.remark1,
                                     style: TextStyle(
-                                      color: getRemark1Color(paymentStatus),
+                                      color: getRemark1Color(invoice.paymentStatus),
                                       fontSize: _remarkFontSize,
                                     ),
                                   ),
                                 ],
                               ),
                             // remark 2
-                            if (remark2.isNotEmpty)
+                            if (invoice.remark2.isNotEmpty)
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
 
@@ -151,7 +143,7 @@ class CommonCard extends StatelessWidget {
                                   ),
                                   SizedBox(width: 5),
                                   Text(
-                                    remark2,
+                                    invoice.remark2,
                                     style: TextStyle(
                                       color: Colors.blueAccent,
                                       fontSize: _remarkFontSize,
@@ -173,20 +165,20 @@ class CommonCard extends StatelessWidget {
                                   height: 8,
                                   decoration: BoxDecoration(
                                     color: paymentStateReturnColor(
-                                      paymentStatus,
+                                      invoice.paymentStatus,
                                     ),
                                     shape: BoxShape.circle,
                                   ),
                                 ),
                                 SizedBox(width: 8),
                                 Text(
-                                  paymentStatusString,
+                                  invoice.paymentStatusString,
                                   style: TextStyle(color: Colors.grey),
                                 ),
                               ],
                             ),
                             Text(
-                              "RM$invoiceTotal",
+                              "RM${invoice.invoiceTotal}",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -242,7 +234,40 @@ class ItemCard extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(width: 10),
-                Icon(Icons.more_vert_rounded),
+                PopupMenuButton(
+                  padding: EdgeInsetsGeometry.all(0),
+                  itemBuilder: (context) => [
+                    PopupMenuItem(value: 0, child: Text("Duplicate")),
+                    PopupMenuItem(
+                      value: 1,
+                      child: Text("Delete", style: TextStyle(color: Colors.red[700])),
+                    ),
+                  ],
+                  onSelected: (value) {
+                    switch (value) {
+                      case 0:
+                        context.read<ItemProvider>().duplicateItemCard(
+                          item,
+                        );
+                        break;
+                      case 1:
+                        context.read<ItemProvider>().deleteItemCard(
+                          item.id,
+                        );
+                        break;
+                    }
+                  },
+                  color: Colors.white,
+                  popUpAnimationStyle: AnimationStyle(
+                    curve: Curves.easeOut, // Entry animation curve
+                    duration: Duration(milliseconds: 100), // Entry animation duration
+                    reverseCurve: Curves.easeIn, // Exit animation curve
+                    reverseDuration: Duration(
+                      milliseconds: 100,
+                    ), // Exit animation duration
+                  ),
+                ),
+
               ],
             ),
           ],
@@ -253,25 +278,20 @@ class ItemCard extends StatelessWidget {
 }
 
 class ClientCard extends StatelessWidget {
-  final String clientName;
-  final String clientEmail;
-  final String clientAddress;
-  final String clientPhone;
-  final String clientClassification;
-  final int invoiceCount;
+  final Client client;
 
   const ClientCard({
     super.key,
-    required this.clientName,
-    this.clientEmail = "",
-    this.clientAddress = "",
-    this.clientPhone = "",
-    this.clientClassification = "None",
-    this.invoiceCount = 0,
+    required this.client
   });
 
   @override
   Widget build(BuildContext context) {
+    if(kDebugMode){
+      print("client.id: ${client.id}");
+      print("client.name: ${client.name}");
+      print("client.invoiceCount: ${client.invoiceCount}");
+    }
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -294,10 +314,52 @@ class ClientCard extends StatelessWidget {
           ),
           child: const Icon(Icons.person, size: 25.0, color: AppColor.blue),
         ),
-        title: Text(clientName),
-        subtitle: Text("$invoiceCount invoices"),
-        onTap: () {},
-        trailing: Icon(Icons.more_vert_rounded),
+        title: Text(client.name),
+        subtitle: Text("${client.invoiceCount} invoices"),
+        onTap: () {
+          if(kDebugMode) print("Tap ${client.name} : ${client.id}");
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddClient(
+                isNew: false,
+                client: client, // Pass the supplier's data
+              ),
+            ),
+          );
+        },
+        trailing: PopupMenuButton(
+          itemBuilder: (context) => [
+            PopupMenuItem(value: 0, child: Text("Duplicate")),
+            PopupMenuItem(
+              value: 1,
+              child: Text("Delete", style: TextStyle(color: Colors.red[700])),
+            ),
+          ],
+          onSelected: (value) {
+            switch (value) {
+              case 0:
+                context.read<ClientProvider>().duplicateClientCard(
+                  client,
+                );
+                break;
+              case 1:
+                context.read<ClientProvider>().deleteClientCard(
+                  client.id,
+                );
+                break;
+            }
+          },
+          color: Colors.white,
+          popUpAnimationStyle: AnimationStyle(
+            curve: Curves.easeOut, // Entry animation curve
+            duration: Duration(milliseconds: 100), // Entry animation duration
+            reverseCurve: Curves.easeIn, // Exit animation curve
+            reverseDuration: Duration(
+              milliseconds: 100,
+            ), // Exit animation duration
+          ),
+        ),
       ),
     );
   }

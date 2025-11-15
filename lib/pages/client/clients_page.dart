@@ -23,10 +23,6 @@ class _ClientsPageState extends State<ClientsPage> {
 
   @override
   Widget build(BuildContext context) {
-    void navigateToAddClient(BuildContext context) => Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => AddClient()),
-    );
     // Use context.watch() to get the provider and rebuild when it changes.
     final clientProvider = context.watch<ClientProvider>();
 
@@ -37,7 +33,10 @@ class _ClientsPageState extends State<ClientsPage> {
     // The logic for filteredCardList is now inside the provider.
     final List<ClientCard> filteredCardList = clientProvider.filteredCardList;
 
-    if (kDebugMode) print("filteredCardList: $filteredCardList");
+    void navigateToAddClient(BuildContext context) => Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddClient(context: context)),
+    );
 
     return Scaffold(
       appBar: AppBar(

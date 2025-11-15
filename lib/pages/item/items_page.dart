@@ -35,7 +35,6 @@ class _ItemsPageState extends State<ItemsPage> {
 
     // The logic for filteredCardList is now inside the provider.
     final List<ItemCard> filteredCardList = itemProvider.filteredCardList;
-    if(kDebugMode) print("filteredCardList: $filteredCardList");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColor.globalBackground,

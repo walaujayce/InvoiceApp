@@ -17,15 +17,31 @@ class ItemProvider extends ChangeNotifier {
 
   String get selectedFilter => _filterTypeList[_selectedIndex];
   List<ItemCard> get filteredCardList {
-    if (selectedFilter == "ALL") {
+    if (selectedFilter == _filterTypeList[0]) {
       return _itemCardList;
     } else {
       return _itemCardList.where((card) {
-        return card.item.category == selectedFilter;
+        return card.item.category == _selectedIndex;
       }).toList();
     }
   }
+  
+  final Map<int, String> _unitList = {
+    0: "No unit",
+    1: "hrs",
+    2: "kgs",
+    3: "pcs",
+  };
+  Map<int, String> get unitList => _unitList;
 
+  final Map<int, String> _categoryList = {
+    0: "Goods",
+    1: "Services",
+    2: "Popular",
+    3: "Merchandise",
+  };
+  Map<int, String> get categoryList => _categoryList;
+  
   // --- METHODS (Logic) ---
 
   // This replaces onFilterTypeSelected
@@ -58,8 +74,20 @@ class ItemProvider extends ChangeNotifier {
   }
 
   void deleteItemCard(String itemId) {
-    // Remove the card where the supplier ID matches.
+    // Remove the card where the Item ID matches.
     _itemCardList.removeWhere((card) => card.item.id == itemId);
     notifyListeners(); // Tell the UI to rebuild
+  }
+
+  void duplicateItemCard(Item currentItem) {
+    Item newItem = Item(
+      name: currentItem.name,
+      price: currentItem.price,
+      unit: currentItem.unit,
+      category: currentItem.category,
+      description: currentItem.description,
+    );
+    _itemCardList.add(ItemCard(item: newItem));
+    notifyListeners(); // This tells the UI to rebuild
   }
 }

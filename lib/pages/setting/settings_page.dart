@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:invoice_app/pages/setting/subpages/business_subpage.dart';
 
 import '../../styles/colors.dart';
 
@@ -46,6 +47,10 @@ class SettingsPage extends StatelessWidget {
                         if (kDebugMode) {
                           print("tile is pressed");
                         }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => BusinessSubpage()),
+                        );
                       },
                     ),
                     // Language & Format

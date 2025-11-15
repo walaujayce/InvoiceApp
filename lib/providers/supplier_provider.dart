@@ -17,11 +17,11 @@ class SupplierProvider extends ChangeNotifier {
 
   String get selectedFilter => _filterTypeList[_selectedIndex];
   List<SupplierCard> get filteredCardList {
-    if (selectedFilter == "ALL") {
+    if (selectedFilter == _filterTypeList[0]) {
       return _supplierCardList;
     } else {
       return _supplierCardList.where((card) {
-        return card.supplier.classification == selectedFilter;
+        return card.supplier.classification == _selectedIndex;
       }).toList();
     }
   }
@@ -42,7 +42,6 @@ class SupplierProvider extends ChangeNotifier {
     notifyListeners(); // This tells the UI to rebuild
   }
 
-  // This replaces addInvoiceCard
   void addSupplierCard(Supplier newSupplier) {
     _supplierCardList.add(SupplierCard(supplier: newSupplier));
     notifyListeners(); // This tells the UI to rebuild

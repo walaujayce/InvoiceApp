@@ -11,13 +11,7 @@ class AddItem extends StatefulWidget {
   final bool isNew;
   final Item? item;
   final BuildContext? context;
-  const AddItem({
-    super.key,
-    this.isNew = true,
-    this.item,
-    this.context,
-  });
-
+  const AddItem({super.key, this.isNew = true, this.item, this.context});
 
   @override
   State<AddItem> createState() => _AddItemState();
@@ -27,38 +21,42 @@ class _AddItemState extends State<AddItem> {
   final _formKey = GlobalKey<FormState>();
   final _productNameController = TextEditingController();
   final _priceController = TextEditingController();
-  final _unitController = TextEditingController();
-  final _categoryController = TextEditingController();
   final _descriptionController = TextEditingController();
 
   bool isSaveButtonPressed = false;
+  int selectedUnit = 0;
+  int selectedCategory = 0;
 
   void saveItem() {
     isSaveButtonPressed = true;
     if (_formKey.currentState!.validate()) {
       if (widget.isNew) {
-        context.read<ItemProvider>().addItemCard(Item(
-          name: _productNameController.text,
-          price: double.tryParse(_priceController.text) ?? 0.0,
-          unit: _unitController.text,
-          category: _categoryController.text,
-          description: _descriptionController.text,
-        ));
+        context.read<ItemProvider>().addItemCard(
+          Item(
+            name: _productNameController.text,
+            price: double.tryParse(_priceController.text) ?? 0.0,
+            unit: selectedUnit,
+            category: selectedCategory,
+            description: _descriptionController.text,
+          ),
+        );
       } else {
-        context.read<ItemProvider>().updateItemCard(Item(
-          id: widget.item!.id,
-          name: _productNameController.text,
-          price: double.tryParse(_priceController.text) ?? 0.0,
-          unit: _unitController.text,
-          category: _categoryController.text,
-          description: _descriptionController.text,
-        ));
+        context.read<ItemProvider>().updateItemCard(
+          Item(
+            id: widget.item!.id,
+            name: _productNameController.text,
+            price: double.tryParse(_priceController.text) ?? 0.0,
+            unit: selectedUnit,
+            category: selectedCategory,
+            description: _descriptionController.text,
+          ),
+        );
       }
       // After saving, you probably want to close the page
       Navigator.of(context).pop();
     } else {
       if (kDebugMode) {
-        print("Form is not valid");
+        print("Item form is not valid");
       }
     }
   }
@@ -70,8 +68,8 @@ class _AddItemState extends State<AddItem> {
     if (!widget.isNew && widget.item != null) {
       _productNameController.text = widget.item!.name;
       _priceController.text = widget.item!.price.toString();
-      _unitController.text = widget.item!.unit;
-      _categoryController.text = widget.item!.category;
+      selectedUnit = widget.item!.unit;
+      selectedCategory = widget.item!.category;
       _descriptionController.text = widget.item!.description;
     }
 
@@ -88,8 +86,6 @@ class _AddItemState extends State<AddItem> {
   void dispose() {
     _productNameController.dispose();
     _priceController.dispose();
-    _unitController.dispose();
-    _categoryController.dispose();
     _descriptionController.dispose();
     isSaveButtonPressed = false;
     super.dispose();
@@ -125,39 +121,80 @@ class _AddItemState extends State<AddItem> {
           key: _formKey,
           child: Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Column(
-              children: [
-                InputTextFormField(
-                  title: "Product Name",
-                  inputController: _productNameController,
-                ),
-                SizedBox(height: 10),
-                InputTextField(title: "Price", inputController: _priceController,),
-                SizedBox(height: 10),
-                CustomDropdownMenu(
-                  title: "Unit",
-                  dropDownList: [
-                    DropdownMenuEntry(value: "No unit", label: "No unit"),
-                    DropdownMenuEntry(value: "hrs", label: "hrs"),
-                    DropdownMenuEntry(value: "kgs", label: "kgs"),
-                    DropdownMenuEntry(value: "pcs", label: "pcs"),
-                  ],
-                ),
-                SizedBox(height: 10),
-                // InputTextField(title: "Barcode"),
-                // SizedBox(height: 10),
-                CustomDropdownMenu(
-                  title: "Category",
-                  dropDownList: [
-                    DropdownMenuEntry(value: "No category", label: "No category"),
-                    DropdownMenuEntry(value: "Goods", label: "Goods"),
-                    DropdownMenuEntry(value: "Services", label: "Services"),
-                    DropdownMenuEntry(value: "Merchandise", label: "Merchandise"),
-                  ],
-                ),
-                SizedBox(height: 10),
-                InputTextField(title: "Description", inputController: _descriptionController,),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  InputTextFormField(
+                    title: "Product Name",
+                    inputController: _productNameController,
+                  ),
+                  SizedBox(height: 10),
+                  InputTextField(
+                    title: "Price",
+                    inputController: _priceController,
+                    keyboardType: TextInputType.number,
+                  ),
+                  SizedBox(height: 10),
+                  CustomDropdownMenu(
+                    title: "Unit",
+                    dropDownList: context
+                        .read<ItemProvider>()
+                        .unitList
+                        .entries
+                        .map((entry) {
+                          return DropdownMenuEntry(
+                            value:
+                                entry.key, // Use the map key (int) as the value
+                            label: entry
+                                .value, // Use the map value (String) as the label
+                          );
+                        })
+                        .toList(),
+                    initialSelection: selectedUnit,
+                    onSelected: (selectedValue) {
+                      if (selectedValue != null) {
+                        setState(() {
+                          // The callback gives you the VALUE (the int)
+                          selectedUnit = selectedValue as int;
+                        });
+                      }
+                    },
+                  ),
+                  SizedBox(height: 10),
+                  // InputTextField(title: "Barcode"),
+                  // SizedBox(height: 10),
+                  CustomDropdownMenu(
+                    title: "Category",
+                    dropDownList: context
+                        .read<ItemProvider>()
+                        .categoryList
+                        .entries
+                        .map((entry) {
+                          return DropdownMenuEntry(
+                            value:
+                                entry.key, // Use the map key (int) as the value
+                            label: entry
+                                .value, // Use the map value (String) as the label
+                          );
+                        })
+                        .toList(),
+                    initialSelection: selectedCategory,
+                    onSelected: (selectedValue) {
+                      if (selectedValue != null) {
+                        setState(() {
+                          // The callback gives you the VALUE (the int)
+                          selectedCategory = selectedValue as int;
+                        });
+                      }
+                    },
+                  ),
+                  SizedBox(height: 10),
+                  InputTextField(
+                    title: "Description",
+                    inputController: _descriptionController,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

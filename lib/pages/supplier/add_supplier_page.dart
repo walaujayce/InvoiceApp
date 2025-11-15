@@ -54,6 +54,7 @@ class _AddSupplierState extends State<AddSupplier> {
             phone: _phoneController.text,
             address: _addressController.text,
             classification: selectedClassification,
+            invoiceCount: widget.supplier!.invoiceCount,
           ),
         );
       }
@@ -61,7 +62,7 @@ class _AddSupplierState extends State<AddSupplier> {
       Navigator.of(context).pop();
     } else {
       if (kDebugMode) {
-        print("Form is not valid");
+        print("Supplier form is not valid");
       }
     }
   }
@@ -125,51 +126,59 @@ class _AddSupplierState extends State<AddSupplier> {
         key: _formKey,
         child: Padding(
           padding: const EdgeInsets.all(15.0),
-          child: Column(
-            children: [
-              InputTextFormField(
-                title: "Supplier Name",
-                inputController: _supplierNameController,
-              ),
-              SizedBox(height: 10),
-              InputTextField(title: "Email", inputController: _emailController),
-              SizedBox(height: 10),
-              InputTextField(
-                title: "Phone Number",
-                inputController: _phoneController,
-              ),
-              SizedBox(height: 10),
-              InputTextField(
-                title: "Address",
-                inputController: _addressController,
-              ),
-              SizedBox(height: 10),
-              CustomDropdownMenu(
-                title: "Classification",
-                dropDownList: context
-                    .read<SupplierProvider>()
-                    .classificationList
-                    .entries
-                    .map((entry) {
-                      return DropdownMenuEntry(
-                        value: entry.key, // Use the map key (int) as the value
-                        label: entry
-                            .value, // Use the map value (String) as the label
-                      );
-                    })
-                    .toList(),
-                initialSelection: selectedClassification,
-                onSelected: (selectedValue) {
-                  if (selectedValue != null) {
-                    setState(() {
-                      // The callback gives you the VALUE (the int)
-                      selectedClassification = selectedValue as int;
-                    });
-                  }
-                },
-              ),
-              SizedBox(height: 10),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                InputTextFormField(
+                  title: "Supplier Name",
+                  inputController: _supplierNameController,
+                ),
+                SizedBox(height: 10),
+                InputTextField(
+                  title: "Email",
+                  inputController: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                SizedBox(height: 10),
+                InputTextField(
+                  title: "Phone Number",
+                  inputController: _phoneController,
+                  keyboardType: TextInputType.phone,
+                ),
+                SizedBox(height: 10),
+                InputTextField(
+                  title: "Address",
+                  inputController: _addressController,
+                  keyboardType: TextInputType.streetAddress,
+                ),
+                SizedBox(height: 10),
+                CustomDropdownMenu(
+                  title: "Classification",
+                  dropDownList: context
+                      .read<SupplierProvider>()
+                      .classificationList
+                      .entries
+                      .map((entry) {
+                        return DropdownMenuEntry(
+                          value: entry.key, // Use the map key (int) as the value
+                          label: entry
+                              .value, // Use the map value (String) as the label
+                        );
+                      })
+                      .toList(),
+                  initialSelection: selectedClassification,
+                  onSelected: (selectedValue) {
+                    if (selectedValue != null) {
+                      setState(() {
+                        // The callback gives you the VALUE (the int)
+                        selectedClassification = selectedValue as int;
+                      });
+                    }
+                  },
+                ),
+                SizedBox(height: 10),
+              ],
+            ),
           ),
         ),
       ),

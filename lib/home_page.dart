@@ -2,6 +2,8 @@ import 'package:flutter/material.dart' hide MenuBar;
 import 'package:invoice_app/models/item.dart';
 import 'package:invoice_app/pages/item/add_item_page.dart';
 import 'package:invoice_app/pages/setting/settings_page.dart';
+import 'package:invoice_app/pages/setting/subpages/business/add_business.dart';
+import 'package:invoice_app/pages/setting/subpages/business_subpage.dart';
 import 'package:invoice_app/pages/supplier/add_supplier_page.dart';
 import 'package:invoice_app/pages/supplier/suppliers_page.dart';
 import 'package:invoice_app/components/menu_bar.dart';
@@ -18,7 +20,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Widget _selectedPage = SuppliersPage();
+  Widget _selectedPage = BusinessSubpage();
   int _selectedIndex = 0;
 
   void _onMenuItemSelected(int index) {
@@ -28,19 +30,19 @@ class _HomePageState extends State<HomePage> {
         case 0:
           _selectedPage = const InvoicesPage();
           break;
-        case 1:
-          _selectedPage = const EstimatesPage();
+        // case 1:
+        //   _selectedPage = const EstimatesPage();
           break;
-        case 2:
+        case 1:
           _selectedPage = const ItemsPage();
           break;
-        case 3:
+        case 2:
           _selectedPage = const ClientsPage();
           break;
-        case 4:
+        case 3:
           _selectedPage = const SuppliersPage();
           break;
-        case 5:
+        case 4:
           _selectedPage = const SettingsPage();
           break;
         default:

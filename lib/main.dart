@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:invoice_app/home_page.dart';
+import 'package:invoice_app/providers/business_provider.dart';
 import 'package:invoice_app/providers/client_provider.dart';
 import 'package:invoice_app/providers/estimate_provider.dart';
 import 'package:invoice_app/providers/invoice_provider.dart';
@@ -18,6 +19,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => ClientProvider()),
         ChangeNotifierProvider(create: (context) => SupplierProvider()),
         ChangeNotifierProvider(create: (context) => SettingProvider()),
+        ChangeNotifierProvider(create: (context) => BusinessProvider()),
       ],
       child: const MyApp(),
     ),

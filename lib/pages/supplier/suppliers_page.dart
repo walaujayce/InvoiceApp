@@ -39,8 +39,6 @@ class _SupplierPageState extends State<SuppliersPage> {
       MaterialPageRoute(builder: (context) => AddSupplier(context: context)),
     );
 
-    if (kDebugMode) print("filteredCardList: $filteredCardList");
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -106,7 +104,7 @@ class _SupplierPageState extends State<SuppliersPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "No clients!",
+                        "No Suppliers!",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 28,

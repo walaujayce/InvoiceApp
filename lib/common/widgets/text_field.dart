@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class InputTextField extends StatelessWidget {
   final String title;
   final TextEditingController? inputController;
+  final TextInputType? keyboardType;
 
-  const InputTextField({super.key, required this.title, this.inputController});
+  const InputTextField({super.key, required this.title, this.inputController, this.keyboardType = TextInputType.multiline});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +13,7 @@ class InputTextField extends StatelessWidget {
       child: TextField(
         minLines: 1,
         maxLines: 3,
-        keyboardType:  TextInputType.multiline,
+        keyboardType: keyboardType,
         controller: inputController,
         decoration: InputDecoration(
           // filled: true,

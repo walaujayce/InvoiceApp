@@ -14,7 +14,7 @@ class MenuBar extends StatelessWidget {
 
   final List<String> _menuBarItems = [
     "Invoices",
-    "Estimates",
+    // "Estimates",
     "Items",
     "Clients",
     "Suppliers",
@@ -23,7 +23,7 @@ class MenuBar extends StatelessWidget {
 
   final List<IconData> _menuBarIcons = [
     Icons.description_outlined,
-    Icons.calculate_outlined,
+    // Icons.calculate_outlined,
     Icons.shopping_cart_outlined,
     Icons.account_circle_outlined,
     Icons.factory_outlined,

@@ -34,7 +34,7 @@ class _InvoicesPageState extends State<InvoicesPage> {
     final invoiceProviderReader = context.read<InvoiceProvider>();
 
     // The logic for filteredCardList is now inside the provider.
-    final List<CommonCard> filteredCardList = invoiceProvider.filteredCardList;
+    final List<InvoiceCard> filteredCardList = invoiceProvider.filteredCardList;
     final List<Summary> summaryList = invoiceProvider.summaryList;
 
     return Scaffold(

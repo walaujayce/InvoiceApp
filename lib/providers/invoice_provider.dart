@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../common/widgets/card.dart';
+import '../models/invoice.dart';
 import '../models/summary.dart';
 import '../styles/colors.dart';
 import '../util/enums.dart';
@@ -17,8 +18,8 @@ class InvoiceProvider extends ChangeNotifier{
   ];
   List<String> get filterTypeList => _filterTypeList;
 
-  final List<CommonCard> _commonCardList = [
-    CommonCard(
+  final List<InvoiceCard> _invoiceList = [
+    InvoiceCard(invoice: Invoice(
       paymentStatus: EPaymentState.partially,
       setDate: "01/10/2025",
       clientName: "John Doe",
@@ -28,16 +29,18 @@ class InvoiceProvider extends ChangeNotifier{
       paymentStatusString: EPaymentState.partially.paymentStateTitle,
       invoiceTotal: 132,
     ),
-    CommonCard(
+    ),
+    InvoiceCard(invoice: Invoice(
       paymentStatus: EPaymentState.overdue,
       setDate: "01/10/2025",
       clientName: "Rose",
       invoiceID: "#INV002",
       remark1: "Overdue 23 days",
       paymentStatusString: EPaymentState.overdue.paymentStateTitle,
-      invoiceTotal: 55,
+      invoiceTotal: 55,),
     ),
-    CommonCard(
+    InvoiceCard(
+      invoice: Invoice(
       paymentStatus: EPaymentState.paid,
       setDate: "01/10/2025",
       clientName: "Mary Land",
@@ -45,8 +48,9 @@ class InvoiceProvider extends ChangeNotifier{
       remark1: "Mark as Paid: 14/10/2025 11:14 PM",
       paymentStatusString: EPaymentState.paid.paymentStateTitle,
       invoiceTotal: 44,
+      ),
     ),
-    CommonCard(
+    InvoiceCard(invoice: Invoice(
       paymentStatus: EPaymentState.unpaid,
       setDate: "01/10/2025",
       clientName: "Dick Head",
@@ -54,18 +58,19 @@ class InvoiceProvider extends ChangeNotifier{
       paymentStatusString: EPaymentState.unpaid.paymentStateTitle,
       invoiceTotal: 87,
     ),
+    ),
   ];
 
   // --- GETTERS (Derived State) ---
 
   String get selectedFilter => _filterTypeList[_selectedIndex];
 
-  List<CommonCard> get filteredCardList {
+  List<InvoiceCard> get filteredCardList {
     if (selectedFilter == "ALL") {
-      return _commonCardList;
+      return _invoiceList;
     } else {
-      return _commonCardList.where((card) {
-        return card.paymentStatus.paymentStateTitle == selectedFilter;
+      return _invoiceList.where((card) {
+        return card.invoice.paymentStatus.paymentStateTitle == selectedFilter;
       }).toList();
     }
   }
@@ -75,15 +80,15 @@ class InvoiceProvider extends ChangeNotifier{
     // Helper function to calculate totals for a specific status
     Summary calculateSummary(EPaymentState? status, String title, LinearGradient gradient) {
       // Filter the list
-      final List<CommonCard> list;
+      final List<InvoiceCard> list;
       if (status == null) {
-        list = _commonCardList; // "All"
+        list = _invoiceList; // "All"
       } else {
-        list = _commonCardList.where((card) => card.paymentStatus == status).toList();
+        list = _invoiceList.where((card) => card.invoice.paymentStatus == status).toList();
       }
 
       // Calculate total
-      double total = list.fold(0.0, (sum, card) => sum + card.invoiceTotal);
+      double total = list.fold(0.0, (sum, card) => sum + card.invoice.invoiceTotal);
 
       return Summary(
         selectedType: 'invoices',
@@ -134,13 +139,15 @@ class InvoiceProvider extends ChangeNotifier{
 
   // This replaces addInvoiceCard
   void addInvoiceCard() {
-    _commonCardList.add(CommonCard(
+    _invoiceList.add(InvoiceCard(
+      invoice: Invoice(
       paymentStatus: EPaymentState.unpaid,
       setDate: "01/10/2025",
       clientName: "Dick Head",
       invoiceID: "#INV004", // You might want to make this dynamic
       paymentStatusString: EPaymentState.unpaid.paymentStateTitle,
       invoiceTotal: 87,
+      ),
     ));
     notifyListeners(); // This tells the UI to rebuild
   }
